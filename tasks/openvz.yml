@@ -1,0 +1,22 @@
+- name: set variables for openvz
+  include_vars: "defaults/openvz.yml"
+
+- name: install iptables
+  yum:
+    name: iptables-services
+    state: latest
+
+- name: turn off firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+    masked: yes
+
+- name: turn on iptables
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+    masked: no
+

@@ -1,0 +1,51 @@
+# tasks file for fail2ban
+---
+- name: openvz specific
+  import_tasks: openvz.yml
+  when: ansible_virtualization_type == "openvz"
+
+- name: install
+  yum:
+    name: "{{ item }}"
+    state: "latest"
+  with_items: "{{ fail2ban_dependencies }}"
+  tags:
+    - configuration
+    - fail2ban
+    - fail2ban-install
+
+- name: update configuration file - /etc/fail2ban/fail2ban.conf
+  template:
+    src: fail2ban.conf.j2
+    dest: /etc/fail2ban/fail2ban.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+  tags:
+    - configuration
+    - fail2ban
+    - fail2ban-configuration
+
+- name: update configuration file - /etc/fail2ban/jail.local
+  template:
+    src: jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+  tags:
+    - configuration
+    - fail2ban
+    - fail2ban-configuration
+
+- name: start and enable service
+  systemd:
+    name: fail2ban
+    state: "{{ service_default_state | default('started') }}"
+    enabled: "{{ service_default_enabled | default(true) | bool }}"
+  tags:
+    - configuration
+    - fail2ban
+    - fail2ban-start-enable-service

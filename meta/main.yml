@@ -1,0 +1,17 @@
+# meta file for fail2ban
+---
+galaxy_info:
+  author: Jeremy Van Veelen
+  company: vanveelen.com
+  description: Set up fail2ban in RHEL-like systems
+  license: MIT
+  min_ansible_version: 2.4.0.0
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  galaxy_tags:
+    - system
+    - networking
+dependencies: 
+  - geerlingguy.repo-epel
